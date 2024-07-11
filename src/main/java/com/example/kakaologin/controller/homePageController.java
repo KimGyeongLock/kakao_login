@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @RequiredArgsConstructor
 @Controller
-public class homeController {
+public class homePageController {
 
     private final KakaoService kakaoService;
 
