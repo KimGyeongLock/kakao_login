@@ -1,0 +1,27 @@
+kakao:
+  client_id: ${KAKAO_CLIENT_ID}
+  redirect_uri: ${KAKAO_REDIRECT_URI}
+  client_secret: ${KAKAO_CLIENT_SECRET}
+server:
+  servlet:
+    session:
+      timeout: 30m
+
+springdoc:
+  swagger-ui:
+    groups-order: DESC # path, query, body, response ??? ??
+    tags-sorter: alpha # ??? ??? ??? ??
+    operations-sorter: method # delete - get - patch - post - put ??? ??, alpha? ???? ??? ??? ?? ??
+    disable-swagger-default-url: true
+    display-request-duration: true
+    defaultModelsExpandDepth: 2
+    defaultModelExpandDepth: 2
+  api-docs:
+    path: /api-docs # swagger-ui ?? ??? ?? ??, ?? ??? ???? http://localhost:8080/swagger-ui/index.html? ????? ?.
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  paths-to-match:
+    - /** # swagger-ui? ??? api? ????? ??
