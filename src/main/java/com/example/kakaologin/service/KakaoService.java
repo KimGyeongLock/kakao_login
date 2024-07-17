@@ -32,6 +32,7 @@ public class KakaoService {
     private final static String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
 
     public String getKakaoLogin() {
+
         return KAUTH_TOKEN_URL_HOST + "/oauth/authorize"
                 + "?client_id=" + KAKAO_CLIENT_ID
                 + "&redirect_uri=" + KAKAO_REDIRECT_URL
