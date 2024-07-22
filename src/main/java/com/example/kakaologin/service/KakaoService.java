@@ -1,7 +1,9 @@
 package com.example.kakaologin.service;
 
+import com.example.kakaologin.domain.KakaoUser;
 import com.example.kakaologin.dto.KakaoTokenResponseDto;
 import com.example.kakaologin.dto.KakaoUserInfoResponseDto;
+import com.example.kakaologin.repository.KakaoUserRepository;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,9 @@ public class KakaoService {
     private final static String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
     private final static String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
 
-    public String getKakaoLogin() {
+    private final KakaoUserRepository kakaoUserRepository;
 
+    public String getKakaoLogin() {
         return KAUTH_TOKEN_URL_HOST + "/oauth/authorize"
                 + "?client_id=" + KAKAO_CLIENT_ID
                 + "&redirect_uri=" + KAKAO_REDIRECT_URL
@@ -87,6 +90,16 @@ public class KakaoService {
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
                 .bodyToMono(KakaoUserInfoResponseDto.class)
                 .block();
+
+        // DB에 사용자 정보 저장
+        KakaoUser kakaoUser = kakaoUserRepository.findByKakaoId(userInfo.getId());
+        if (kakaoUser == null) {
+            kakaoUser = new KakaoUser();
+            kakaoUser.setKakaoId(userInfo.getId());
+        }
+        kakaoUser.setNickname(userInfo.getKakaoAccount().getProfile().getNickName());
+        kakaoUser.setProfileImageUrl(userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
+        kakaoUserRepository.save(kakaoUser);
 
         // 세션에 사용자 정보 저장
         session.setAttribute("userId", userInfo.getId());
